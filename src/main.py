@@ -45,7 +45,7 @@ if __name__ == "__main__":
     '''
     Controlando 2 carros até um deles atingir 300 Km
     '''
-    while carro1.odometro < 300 and carro2.odometro < 300 and (carro1.tanque > 0 or carro2.tanque > 0):
+    while carro1.get_odometro() < 300 and carro2.get_odometro() < 300 and (carro1.get_tanque()> 0 or carro2.get_tanque() > 0):
         try:
             op_carro=0
             while op_carro not in (1,2):
@@ -73,14 +73,14 @@ if __name__ == "__main__":
     print(carro2)
     print("\n")
 
-    if carro1.odometro > 300 or carro2.odometro > 300:
-        if carro1.odometro > 300:
+    if carro1.get_odometro() > 300 or carro2.get_odometro() > 300:
+        if carro1.get_odometro() > 300:
             print("o Carro 1 chegou em primeiro")
         else:
             print("o Carro 2 chegou em primeiro")
 
     else:
-        if carro1.tanque <= 0:
+        if carro1.get_tanque() <= 0:
             print("Acabou a gasolina do carro 1")
         else:
             print("Acabou a gasolina do carro 2")
