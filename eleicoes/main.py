@@ -1,6 +1,6 @@
 import pickle
 import traceback
-
+from gerenciar_urna import *
 from common import *
 
 FILE_ELEITORES = 'eleitores.pkl'
@@ -33,8 +33,8 @@ def inserir_eleitor(eleitores):
     nome = input("Digite o nome: ")
     RG = input("Digite o RG: ")
     CPF = input("Digite o CPF: ")
-    secao = input("Digite a secao: ")
-    zona = input("Digite a zona: ")
+    secao = int(input("Digite a secao: "))
+    zona = int(input("Digite a zona: "))
 
     eleitor = Eleitor(nome, RG, CPF, titulo, secao, zona)
     eleitores[eleitor.get_titulo()] = eleitor
@@ -51,8 +51,8 @@ def atualizar_eleitor(eleitores):
     if titulo in eleitores:
         eleitor = eleitores[titulo]
         print(eleitor)
-        secao = input("Digite a nova secao: ")
-        zona = input("Digite a nova zona: ")
+        secao = int(input("Digite a nova secao: "))
+        zona = int(input("Digite a nova zona: "))
         eleitor.secao = secao
         eleitor.zona = zona
 
@@ -90,27 +90,35 @@ def lista_de_candidatos(candidatos):
 if __name__ == "__main__":
     eleitores = {} 
     candidatos = {}
-    
+
+    try:
+        print("Carregando arquivo de eleitores ...")
+
+        with open(FILE_ELEITORES, 'rb') as arquivo:
+            eleitores = pickle.load(arquivo)
+    except FileNotFoundError as fnfe:
+        print(fnfe)
+        print("Arquivo nao encontrado, nenhum eleitor carregado!")
+
+    try:
+        print("Carregando arquivo de candidatos ...")
+
+        with open(FiLE_CANDIDATOS, 'rb') as arquivo:
+            candidatos = pickle.load(arquivo)
+    except FileNotFoundError as fnfe:
+        print(fnfe)
+        print("Arquivo nao encontrado, nenhum eleitor carregado!")
 
     op = 1
     while op in (1,2,3):
 
         print("1- Para area de eleitores")
         print("2- Para area de candidatos")
-        print("3- Sair")
-        op = int(input("Digite uma opçao[1,2,3]:"))
+        print("3- Para area da urna")
+        print("4- Sair")
+        op = int(input("Digite uma opçao[1,2,3,4]:"))
 
         if op == 1:
-            print("entrou 1")
-            try:
-                print("Carregando arquivo de eleitores ...")
-
-                with open(FILE_ELEITORES, 'rb') as arquivo:
-                    eleitores = pickle.load(arquivo)
-            except FileNotFoundError as fnfe:
-                print(fnfe)
-                print("Arquivo nao encontrado, nenhum eleitor carregado!")
-
             opcao = 1
             while opcao in (1,2,3):
                 try:
@@ -128,15 +136,6 @@ if __name__ == "__main__":
                     print(e)
 
         elif op == 2:
-            try:
-                print("Carregando arquivo de candidatos ...")
-
-                with open(FiLE_CANDIDATOS, 'rb') as arquivo:
-                    candidatos = pickle.load(arquivo)
-            except FileNotFoundError as fnfe:
-                print(fnfe)
-                print("Arquivo nao encontrado, nenhum eleitor carregado!")
-
             opcao = 1
             while opcao in (1,2,3):
                 try:
@@ -154,4 +153,25 @@ if __name__ == "__main__":
                     print(e)
         
         elif op == 3:
+            opcao = 1
+            while opcao in (1,2,3,4):
+                try:
+                    opcao = menu_urna()
+                    
+                    if opcao == 1:
+                        urna = iniciar_urna(eleitores.values(), candidatos.values())
+                    elif opcao == 2:
+                        votar(urna)
+                        urna.encerrar()
+                    elif opcao == 3:
+                        print(urna)
+                    elif opcao == 4:
+                        print("Saindo!")
+                        break
+                except Exception as e:
+                    traceback.print_exc()
+                    print(e)
+
+
+        elif op == 4:
             break
