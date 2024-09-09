@@ -59,7 +59,7 @@ def atualizar_eleitor(eleitores):
         with open(FILE_ELEITORES, 'wb') as arquivo:
             pickle.dump(eleitores, arquivo)
 
-        print('Atualizados dados do eleitor!')
+        print('Atualizados dados do eleitor!!')
         print(eleitor)
     else:
         raise Exception('Titulo inexistente')
