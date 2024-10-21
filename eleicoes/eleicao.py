@@ -9,8 +9,7 @@ class Urna:
     __eleitores_presentes : List[Eleitor] = []
     __votos = {} #dicionario chave = numero do candidato, valor é a quantidade de votos
 
-    def __init__(self, mesario : Pessoa, secao : int, zona : int,
-                 candidatos : List[Candidato], eleitores : List[Eleitor]):
+    def __init__(self, mesario : Pessoa, secao : int, zona : int, candidatos : List[Candidato], eleitores : List[Eleitor]):
         self.mesario = mesario
         self.__secao = secao
         self.__zona = zona
