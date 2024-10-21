@@ -1,6 +1,7 @@
 import pickle
 from typing import List
 from common import *
+from Interface_Eleicao import Transparencia
 
 class Urna:
     mesario : Pessoa
@@ -9,7 +10,8 @@ class Urna:
     __eleitores_presentes : List[Eleitor] = []
     __votos = {} #dicionario chave = numero do candidato, valor é a quantidade de votos
 
-    def __init__(self, mesario : Pessoa, secao : int, zona : int, candidatos : List[Candidato], eleitores : List[Eleitor]):
+    def __init__(self, mesario : Pessoa, secao : int, zona : int,
+                 candidatos : List[Candidato], eleitores : List[Eleitor]):
         self.mesario = mesario
         self.__secao = secao
         self.__zona = zona
@@ -25,8 +27,6 @@ class Urna:
         self.__votos['BRANCO'] = 0
         self.__votos['NULO'] = 0
 
-        self.zeresima()
-
         with open(self.__nome_arquivo, 'wb') as arquivo:
             pickle.dump(self.__votos, arquivo)
 
@@ -38,9 +38,7 @@ class Urna:
 
     def registrar_voto(self, eleitor : Eleitor, n_cand : int):
         self.__eleitores_presentes.append(eleitor)
-        if n_cand == 0:
-            self.__votos['BRANCO'] += 1
-        elif n_cand in self.__votos:
+        if n_cand in self.__votos:
             self.__votos[n_cand] += 1
         else:
             self.__votos['NULO'] += 1
@@ -49,20 +47,6 @@ class Urna:
             pickle.dump(self.__votos, arquivo)
 
     def __str__(self):
-        info = (f'Urna da seção {self.__secao}, zona {self.__zona}\n'
-                f'Mesario {self.mesario}\n')
-        return info + self.quant_votos()
-    
-    def quant_votos(self):
-        info = f'Votos:\n'
-        for k, v in self.__votos.items():
-            info += f'Candidatos {k} = {v} votos\n'
+        info =  f'Urna da seção {self.__secao}, zona {self.__zona}\n'
+        info += f'Mesario {self.mesario}\n'
         return info
-    
-    def zeresima(self):
-        with open('zeresima '+self.__nome_arquivo, 'wb') as arquivo:
-            pickle.dump(self.__votos, arquivo)
-
-    def encerrar(self):
-        with open('final_'+ self.__nome_arquivo, "wb") as arquivo:
-            pickle.dump(self.__votos, arquivo)
