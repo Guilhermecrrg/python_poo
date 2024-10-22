@@ -2,8 +2,9 @@ import pickle
 from typing import List
 from common import *
 from Interface_Eleicao import Transparencia
+import csv
 
-class Urna:
+class Urna(Transparencia):
     mesario : Pessoa
     __secao : int
     __zona : int
@@ -50,3 +51,32 @@ class Urna:
         info =  f'Urna da seção {self.__secao}, zona {self.__zona}\n'
         info += f'Mesario {self.mesario}\n'
         return info
+
+    def to_csv(self):
+        with open(f'trasparencia_{self.__zona}.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Seção', 'Zona', 'Título dos Eleitores Presente'])
+
+            for eleitor in self.__eleitores_presentes:
+                writer.writerow([self.__secao,self.__zona,eleitor.get_titulo()])
+
+    def to_txt(self):
+        with open(f'trasparencia_{self.__zona}.txt', mode='w') as file:
+            for eleitor in self.__eleitores_presentes:
+                file.write(eleitor.__str__())
+
+
+if __name__ == "__main__":
+    c1 = Candidato('Joao','1234','4321', 1)
+    c2 = Candidato('Joao Pedro','2234','4322', 2)
+
+    e1 = Eleitor("Jose da silva", '15435','098',3,54,272)
+    e2 = Eleitor("Rhaun", '25435','1098',4,54,272)  
+    e3 = Eleitor("Felipe", '35435','5098',5,54,272)     
+
+    urna = Urna(e3, 54,272,[c1,c2],[e1,e2,e3])
+    urna.registrar_voto(e1,1)
+    urna.to_csv()
+    urna.to_txt()
+    print(urna)       
+
